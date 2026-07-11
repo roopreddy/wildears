@@ -41,12 +41,8 @@ async function initialize() {
     importScripts('mel-spec-layer.js');
     tf.serialization.registerClass(MelSpecLayerSimple);
 
-    // Use best available backend (webgl > wasm > cpu)
-    try {
-      await tf.setBackend('webgl');
-    } catch {
-      await tf.setBackend('cpu');
-    }
+    // Use CPU backend in worker (WebGL is unreliable in Web Workers)
+    await tf.setBackend('cpu');
     await tf.ready();
 
     postMessage({ type: 'init_progress', progress: 25, status: 'Loading BirdNET model...' });
