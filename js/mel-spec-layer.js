@@ -235,7 +235,7 @@ class MelSpecLayerSimple extends tf.layers.Layer {
 
     // Magnitude scale (learnable parameter from the model)
     this.magScale = this.addWeight(
-      'mag_scale', [], 'float32',
+      'magnitude_scaling', [], 'float32',
       tf.initializers.zeros()
     );
 
