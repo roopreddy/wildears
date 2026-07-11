@@ -63,7 +63,7 @@
         <div class="bar"></div>
         <div class="bar"></div>
       </div>
-      <p class="record-hint">Press to record 3 seconds of wildlife sound</p>
+      <p class="record-hint">Press to record 3 seconds of wildlife sound (birds, frogs, coyotes &amp; more)</p>
       <p id="location-status" class="location-status"></p>
     </div>
 
@@ -73,7 +73,7 @@
     <!-- Upload Area -->
     <div id="upload-area" class="upload-area disabled">
       <div class="upload-icon" aria-hidden="true">&#x1F4C1;</div>
-      <p class="upload-text">Drop an audio file here or click to browse</p>
+      <p class="upload-text">Drop a wildlife audio file here or click to browse</p>
       <p class="upload-formats">WAV, MP3, OGG, FLAC, WebM</p>
       <p id="upload-file-name" class="upload-file-name hidden"></p>
     </div>
@@ -89,7 +89,7 @@
       </div>
 
       <div id="no-results" class="no-results hidden">
-        <p>No species detected above the confidence threshold. Try recording in a quieter area, or get closer to the sound source.</p>
+        <p>No species detected above the confidence threshold. Try recording in a quieter area, get closer to the sound source, or try a different time of day (dawn for birds, dusk for frogs).</p>
       </div>
 
       <div id="results-list"></div>
@@ -135,20 +135,20 @@
 
     <div class="info-card">
       <h3>What is WildEars?</h3>
-      <p>WildEars turns your phone or computer into a biodiversity survey tool. Record or upload a wildlife sound, and our AI identifies the species for you. Save your sightings to build a "Species Heard Here" list that you can share with parks, teachers, or scientists.</p>
+      <p>WildEars turns your phone or computer into a biodiversity survey tool. Record or upload a wildlife sound, and our AI identifies the species for you. It recognizes 6,500+ bird species worldwide, plus select frogs, coyotes, and other vocalizing wildlife. Save your sightings to build a "Species Heard Here" list that you can share with parks, teachers, or scientists.</p>
     </div>
 
     <div class="info-card">
       <h3>How does it work?</h3>
-      <p>WildEars uses the <a href="https://birdnet.cornell.edu/" target="_blank" rel="noopener">BirdNET</a> machine learning model from the Cornell Lab of Ornithology and Chemnitz University of Technology. The AI runs entirely in your browser — your audio never leaves your device.</p>
-      <p style="margin-top: 0.5rem;">The model analyzes 3-second audio clips, computes a spectrogram (a visual representation of sound frequencies), and compares it against patterns learned from thousands of recordings.</p>
+      <p>WildEars uses the <a href="https://birdnet.cornell.edu/" target="_blank" rel="noopener">BirdNET</a> machine learning model from the Cornell Lab of Ornithology and Chemnitz University of Technology. While primarily trained on birds, BirdNET also recognizes frogs, coyotes, foxes, squirrels, and other vocalizing animals. The AI runs entirely in your browser — your audio never leaves your device.</p>
+      <p style="margin-top: 0.5rem;">The model analyzes 3-second audio clips, computes a spectrogram (a visual representation of sound frequencies), and compares it against patterns learned from thousands of wildlife recordings.</p>
     </div>
 
     <div class="info-card">
       <h3>Honest Limitations</h3>
       <ul class="limitation-list">
         <li>Results show <strong>likely</strong> species, not certainty. Always allow for expert confirmation.</li>
-        <li>Works best for <strong>birds</strong>. Frogs, bats, and insects are harder to identify and may need a different tool.</li>
+        <li>Works best for <strong>birds</strong>. Also detects some frogs, coyotes, foxes, and squirrels, but coverage for mammals and insects is limited.</li>
         <li>Needs an <strong>internet connection</strong> to download the AI model the first time (after that it's cached).</li>
         <li>Background noise (wind, traffic, multiple species) reduces accuracy.</li>
         <li>Confidence scores below 50% should be treated as educated guesses.</li>
@@ -160,7 +160,7 @@
       <ul class="limitation-list">
         <li>Record in a quiet area, as close to the animal as safely possible.</li>
         <li>Keep recordings to a single species call if possible.</li>
-        <li>Morning (dawn chorus) is the best time for bird identification.</li>
+        <li>Morning (dawn chorus) is the best time for birds. Frogs are most active at dusk and after rain.</li>
         <li>Hold your phone steady — rustling and handling noise can confuse the AI.</li>
       </ul>
     </div>

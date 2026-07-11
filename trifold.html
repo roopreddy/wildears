@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WildEars Trifold Brochure</title>
+  <style>
+    /* ── Reset & Base ─────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #e8e8e8;
+      color: #1a1a1a;
+      line-height: 1.4;
+    }
+
+    :root {
+      --green-dark: #1a472a;
+      --green-mid: #2d6a4f;
+      --green-light: #52b788;
+      --green-pale: #d8f3dc;
+      --red: #dc3545;
+    }
+
+    /* ── Page Setup ───────────────────────────────────────────── */
+    .page {
+      width: 11in;
+      height: 8.5in;
+      margin: 0.5in auto;
+      background: white;
+      display: flex;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+      overflow: hidden;
+    }
+
+    .panel {
+      width: 3.6667in;
+      height: 8.5in;
+      padding: 0.3in;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Fold guides (screen only) */
+    .panel:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      right: 0;
+      top: 0.5in;
+      bottom: 0.5in;
+      border-right: 1px dashed #ccc;
+    }
+
+    /* ══════════════════════════════════════════════════════════════
+       PANEL 1 — About WildEars + How It Works
+       ══════════════════════════════════════════════════════════════ */
+    .panel-intro {
+      background: linear-gradient(175deg, var(--green-dark) 0%, #1a5c35 50%, var(--green-mid) 100%);
+      color: white;
+      text-align: center;
+      justify-content: space-between;
+    }
+
+    .intro-top { margin-bottom: auto; }
+
+    .intro-icon { font-size: 2rem; margin-bottom: 0.06in; }
+    .intro-title {
+      font-size: 1.8rem;
+      font-weight: 800;
+      letter-spacing: 2px;
+      margin-bottom: 0.03in;
+    }
+    .intro-tagline {
+      font-size: 0.72rem;
+      color: var(--green-light);
+      font-style: italic;
+      margin-bottom: 0.18in;
+    }
+    .intro-desc {
+      font-size: 0.58rem;
+      line-height: 1.5;
+      color: rgba(255,255,255,0.9);
+      max-width: 2.9in;
+      margin: 0 auto 0.18in;
+    }
+
+    .intro-badge {
+      display: inline-block;
+      padding: 5px 14px;
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.25);
+      border-radius: 8px;
+      font-size: 0.5rem;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      line-height: 1.6;
+      margin-bottom: 0.2in;
+    }
+    .intro-badge .season { color: var(--green-light); font-weight: 700; }
+
+    /* Problem callout */
+    .problem-callout {
+      background: rgba(0,0,0,0.2);
+      border-radius: 10px;
+      padding: 0.12in 0.15in;
+      margin-bottom: 0.15in;
+      text-align: left;
+    }
+    .problem-callout h4 {
+      font-size: 0.6rem;
+      margin-bottom: 3px;
+      color: #ffd;
+    }
+    .problem-callout p {
+      font-size: 0.5rem;
+      line-height: 1.45;
+      color: rgba(255,255,255,0.85);
+    }
+
+    /* How it works steps */
+    .steps-title {
+      font-size: 0.72rem;
+      font-weight: 700;
+      margin-bottom: 0.08in;
+      color: var(--green-light);
+    }
+    .step-row {
+      display: flex;
+      gap: 6px;
+      align-items: flex-start;
+      margin-bottom: 0.06in;
+      text-align: left;
+    }
+    .step-num {
+      width: 20px; height: 20px; min-width: 20px;
+      background: rgba(255,255,255,0.2);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.55rem;
+    }
+    .step-text {
+      font-size: 0.5rem;
+      color: rgba(255,255,255,0.9);
+      line-height: 1.35;
+    }
+    .step-text strong { color: white; }
+
+    /* Stats bar */
+    .stat-bar {
+      display: flex;
+      gap: 6px;
+      margin-top: 0.12in;
+    }
+    .stat-item {
+      flex: 1;
+      background: rgba(255,255,255,0.12);
+      border-radius: 8px;
+      padding: 6px 4px;
+      text-align: center;
+    }
+    .stat-num { font-size: 0.85rem; font-weight: 800; }
+    .stat-label {
+      font-size: 0.38rem;
+      color: var(--green-light);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* Expert quotes */
+    .expert-section {
+      background: rgba(255,255,255,0.1);
+      border-radius: 8px;
+      padding: 0.1in;
+      margin-top: 0.1in;
+    }
+    .expert-title {
+      font-size: 0.58rem;
+      font-weight: 700;
+      color: var(--green-light);
+      margin-bottom: 0.05in;
+      text-align: center;
+    }
+    .expert-quote {
+      margin-bottom: 0.06in;
+      padding-left: 0.08in;
+      border-left: 2px solid rgba(255,255,255,0.25);
+    }
+    .expert-quote p {
+      font-size: 0.44rem;
+      color: rgba(255,255,255,0.85);
+      font-style: italic;
+      line-height: 1.4;
+    }
+    .expert-quote .expert-name {
+      font-size: 0.4rem;
+      color: var(--green-light);
+      font-style: normal;
+      font-weight: 600;
+      margin-top: 2px;
+    }
+
+    /* Footer info */
+    .intro-footer {
+      margin-top: 0.08in;
+      font-size: 0.42rem;
+      color: rgba(255,255,255,0.55);
+      line-height: 1.5;
+    }
+    .intro-footer a { color: var(--green-light); text-decoration: none; }
+
+    /* ══════════════════════════════════════════════════════════════
+       PANEL 2 — Sacramento Species Spotlight
+       ══════════════════════════════════════════════════════════════ */
+    .panel-species {
+      background: var(--green-pale);
+    }
+    .species-title {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--green-dark);
+      text-align: center;
+      margin-bottom: 0.02in;
+    }
+    .species-subtitle {
+      font-size: 0.48rem;
+      color: var(--green-mid);
+      text-align: center;
+      margin-bottom: 0.1in;
+    }
+
+    .species-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      flex: 1;
+    }
+    .species-card {
+      background: white;
+      border-radius: 8px;
+      padding: 5px 8px;
+      display: flex;
+      gap: 7px;
+      align-items: center;
+    }
+    .species-emoji {
+      font-size: 1.05rem;
+      min-width: 22px;
+      text-align: center;
+    }
+    .species-info { flex: 1; min-width: 0; }
+    .species-name {
+      font-size: 0.56rem;
+      font-weight: 700;
+      color: var(--green-dark);
+    }
+    .species-sci {
+      font-size: 0.4rem;
+      color: #888;
+      font-style: italic;
+    }
+    .species-fact {
+      font-size: 0.44rem;
+      color: #555;
+      line-height: 1.3;
+      margin-top: 1px;
+    }
+    .species-badge {
+      font-size: 0.36rem;
+      padding: 1px 5px;
+      border-radius: 6px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      white-space: nowrap;
+      margin-left: 4px;
+    }
+    .badge-common { background: #d8f3dc; color: #1a472a; }
+    .badge-uncommon { background: #fff3cd; color: #856404; }
+    .badge-endemic { background: #cce5ff; color: #004085; }
+    .badge-invasive { background: #f8d7da; color: #721c24; }
+
+    .species-footer {
+      margin-top: auto;
+      padding-top: 0.06in;
+      text-align: center;
+      font-size: 0.42rem;
+      color: #888;
+      font-style: italic;
+    }
+
+    /* ══════════════════════════════════════════════════════════════
+       PANEL 3 — Invasive Species + Try It
+       ══════════════════════════════════════════════════════════════ */
+    .panel-action {
+      background: white;
+    }
+
+    .alert-header {
+      background: var(--red);
+      color: white;
+      text-align: center;
+      padding: 7px;
+      border-radius: 8px;
+      margin-bottom: 0.1in;
+    }
+    .alert-header h3 { font-size: 0.75rem; font-weight: 700; }
+    .alert-header p { font-size: 0.42rem; opacity: 0.9; }
+
+    .invasive-box {
+      background: #fff5f5;
+      border: 1px solid #ffcdd2;
+      border-radius: 10px;
+      padding: 0.12in;
+      margin-bottom: 0.1in;
+    }
+    .inv-name {
+      font-size: 0.68rem;
+      font-weight: 700;
+      color: var(--red);
+      margin-bottom: 1px;
+    }
+    .inv-sci {
+      font-size: 0.42rem;
+      color: #888;
+      font-style: italic;
+      margin-bottom: 5px;
+    }
+    .inv-text {
+      font-size: 0.48rem;
+      color: #444;
+      line-height: 1.45;
+      margin-bottom: 5px;
+    }
+    .inv-stat-row {
+      display: flex;
+      gap: 5px;
+    }
+    .inv-stat {
+      flex: 1;
+      text-align: center;
+      background: white;
+      border-radius: 6px;
+      padding: 4px;
+      border: 1px solid #ffcdd2;
+    }
+    .inv-stat .num { font-size: 0.7rem; font-weight: 800; color: var(--red); }
+    .inv-stat .label { font-size: 0.34rem; color: #888; text-transform: uppercase; }
+
+    /* Impact list */
+    .impact-title {
+      font-size: 0.6rem;
+      font-weight: 700;
+      color: var(--green-dark);
+      margin-bottom: 4px;
+    }
+    .impact-list {
+      list-style: none;
+      padding: 0;
+      margin-bottom: 0.1in;
+    }
+    .impact-list li {
+      font-size: 0.46rem;
+      color: #444;
+      padding: 2px 0 2px 13px;
+      position: relative;
+      line-height: 1.4;
+    }
+    .impact-list li::before {
+      content: '\26A0';
+      position: absolute;
+      left: 0;
+      font-size: 0.42rem;
+    }
+
+    /* How WildEars helps */
+    .help-box {
+      background: var(--green-pale);
+      border-radius: 8px;
+      padding: 0.1in;
+      margin-bottom: 0.1in;
+    }
+    .help-box h4 {
+      font-size: 0.55rem;
+      color: var(--green-dark);
+      margin-bottom: 3px;
+    }
+    .help-box p {
+      font-size: 0.45rem;
+      color: #444;
+      line-height: 1.4;
+    }
+
+    /* Try it / QR */
+    .try-section {
+      margin-top: auto;
+      text-align: center;
+      border-top: 1px solid #eee;
+      padding-top: 0.1in;
+    }
+    .try-title {
+      font-size: 0.65rem;
+      font-weight: 700;
+      color: var(--green-dark);
+      margin-bottom: 0.06in;
+    }
+    .qr-placeholder {
+      width: 1in;
+      height: 1in;
+      border: 2px dashed #ccc;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.45rem;
+      color: #999;
+      margin: 0 auto 0.06in;
+      flex-direction: column;
+      gap: 3px;
+    }
+    .qr-placeholder .qr-icon { font-size: 1.4rem; }
+    .try-url {
+      font-size: 0.52rem;
+      color: var(--green-mid);
+      font-weight: 600;
+    }
+    .try-footer {
+      font-size: 0.38rem;
+      color: #aaa;
+      margin-top: 0.06in;
+      line-height: 1.4;
+    }
+
+    /* ══════════════════════════════════════════════════════════════
+       PRINT STYLES
+       ══════════════════════════════════════════════════════════════ */
+    @media print {
+      body { background: white; }
+      .page {
+        margin: 0;
+        box-shadow: none;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+      .panel:not(:last-child)::after { display: none; }
+      .print-instructions { display: none; }
+    }
+
+    @page {
+      size: 11in 8.5in landscape;
+      margin: 0;
+    }
+
+    /* ── Screen helper ────────────────────────────────────────── */
+    .print-instructions {
+      max-width: 11in;
+      margin: 0.3in auto;
+      padding: 0.2in 0.4in;
+      background: #fffde7;
+      border: 1px solid #ffc107;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      color: #555;
+    }
+    .print-instructions strong { color: #333; }
+    .print-instructions code {
+      background: #f5f5f5;
+      padding: 1px 5px;
+      border-radius: 3px;
+      font-size: 0.75rem;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Instructions (screen only) -->
+  <div class="print-instructions">
+    <strong>To save as PDF:</strong> Press <code>Ctrl+P</code> (or <code>Cmd+P</code> on Mac) &rarr; Layout: <strong>Landscape</strong>, Paper: <strong>Letter</strong>, Margins: <strong>None</strong> &rarr; Save as PDF. This prints as a single page that folds into 3 panels.
+  </div>
+
+  <div class="page">
+
+    <!-- ── Panel 1: About WildEars + How It Works ─────────────── -->
+    <div class="panel panel-intro">
+      <div class="intro-top">
+        <div class="intro-icon">&#x1F3A7;</div>
+        <div class="intro-title">WildEars</div>
+        <div class="intro-tagline">Record a sound, get a species</div>
+
+        <div class="intro-desc">
+          A free website that turns any phone into a biodiversity survey tool. Identifies 6,500+ birds, plus frogs, coyotes, and other vocalizing wildlife &mdash; all in your browser.
+        </div>
+
+        <div class="intro-badge">
+          FIRST LEGO League &middot; <span class="season">BIOGLOW 2026&ndash;27</span>
+        </div>
+      </div>
+
+      <div class="problem-callout">
+        <h4>&#x26A0;&#xFE0F; Why This Matters</h4>
+        <p>North America has lost <strong>3 billion birds</strong> since 1970. Frog and mammal populations are also declining. Monitoring wildlife is critical &mdash; but traditional surveys need experts and expensive gear. WildEars lets <em>anyone</em> contribute.</p>
+      </div>
+
+      <div class="steps-title">&#x1F680; How It Works</div>
+
+      <div class="step-row">
+        <div class="step-num">1</div>
+        <div class="step-text"><strong>Open the website</strong> on any phone, tablet, or computer &mdash; no app install needed</div>
+      </div>
+      <div class="step-row">
+        <div class="step-num">2</div>
+        <div class="step-text"><strong>Record 3 seconds</strong> of a wildlife sound, or upload an audio file</div>
+      </div>
+      <div class="step-row">
+        <div class="step-num">3</div>
+        <div class="step-text"><strong>Get instant results</strong> with species ID, confidence score, photos, and fun facts</div>
+      </div>
+      <div class="step-row">
+        <div class="step-num">4</div>
+        <div class="step-text"><strong>Save &amp; share</strong> your sightings, view them on a map, or export as CSV</div>
+      </div>
+
+      <div class="stat-bar">
+        <div class="stat-item">
+          <div class="stat-num">6,500+</div>
+          <div class="stat-label">Species</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">$0</div>
+          <div class="stat-label">Cost</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">3s</div>
+          <div class="stat-label">To ID</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">100%</div>
+          <div class="stat-label">Private</div>
+        </div>
+      </div>
+
+      <div class="expert-section">
+        <div class="expert-title">&#x1F3A4; Expert Voices</div>
+        <div class="expert-quote">
+          <p>&ldquo;Tools like this help people connect with nature right in their own backyard. When you can name what you hear, you start paying attention.&rdquo;</p>
+          <div class="expert-name">&mdash; Naturalist, Effie Yeaw Nature Center</div>
+        </div>
+        <div class="expert-quote">
+          <p>&ldquo;Community science data is vital. The more eyes &mdash; and ears &mdash; we have in the field, the better we can track population changes.&rdquo;</p>
+          <div class="expert-name">&mdash; Volunteer, Sacramento Audubon Society</div>
+        </div>
+      </div>
+
+      <div class="intro-footer">
+        Powered by <a href="https://birdnet.cornell.edu/">BirdNET</a> (Cornell Lab &amp; Chemnitz Univ. of Technology)
+      </div>
+    </div>
+
+    <!-- ── Panel 2: Sacramento Species Spotlight ──────────────── -->
+    <div class="panel panel-species">
+      <div class="species-title">&#x1F426; Sacramento Wildlife</div>
+      <div class="species-subtitle">Native species you can identify with WildEars</div>
+
+      <div class="species-grid">
+        <div class="species-card">
+          <div class="species-emoji">&#x1F413;</div>
+          <div class="species-info">
+            <div class="species-name">California Quail <span class="species-badge badge-common">Common</span></div>
+            <div class="species-sci">Callipepla californica</div>
+            <div class="species-fact">California's state bird! Distinctive "chi-CA-go" call.</div>
+          </div>
+        </div>
+
+        <div class="species-card">
+          <div class="species-emoji">&#x1F426;</div>
+          <div class="species-info">
+            <div class="species-name">Anna's Hummingbird <span class="species-badge badge-common">Common</span></div>
+            <div class="species-sci">Calypte anna</div>
+            <div class="species-fact">Males dive from 130 feet at 60 mph during courtship!</div>
+          </div>
+        </div>
+
+        <div class="species-card">
+          <div class="species-emoji">&#x1F426;</div>
+          <div class="species-info">
+            <div class="species-name">Yellow-billed Magpie <span class="species-badge badge-endemic">Endemic</span></div>
+            <div class="species-sci">Pica nuttalli</div>
+            <div class="species-fact">Found ONLY in California &mdash; nowhere else on Earth!</div>
+          </div>
+        </div>
+
+        <div class="species-card">
+          <div class="species-emoji">&#x1F9A2;</div>
+          <div class="species-info">
+            <div class="species-name">Great Blue Heron <span class="species-badge badge-common">Common</span></div>
+            <div class="species-sci">Ardea herodias</div>
+            <div class="species-fact">4.5 feet tall but only 5&ndash;6 lbs &mdash; hollow bones!</div>
+          </div>
+        </div>
+
+        <div class="species-card">
+          <div class="species-emoji">&#x1FA76;</div>
+          <div class="species-info">
+            <div class="species-name">Acorn Woodpecker <span class="species-badge badge-common">Common</span></div>
+            <div class="species-sci">Melanerpes formicivorus</div>
+            <div class="species-fact">Stores up to 50,000 acorns in a single granary tree!</div>
+          </div>
+        </div>
+
+        <div class="species-card">
+          <div class="species-emoji">&#x1F426;</div>
+          <div class="species-info">
+            <div class="species-name">Western Bluebird <span class="species-badge badge-uncommon">Uncommon</span></div>
+            <div class="species-sci">Sialia mexicana</div>
+            <div class="species-fact">Stunning blue plumage. Benefits from nest box programs.</div>
+          </div>
+        </div>
+
+        <div class="species-card">
+          <div class="species-emoji">&#x1F989;</div>
+          <div class="species-info">
+            <div class="species-name">Barn Owl <span class="species-badge badge-uncommon">Uncommon</span></div>
+            <div class="species-sci">Tyto alba</div>
+            <div class="species-fact">Eats 3,000+ rodents per season &mdash; amazing pest control!</div>
+          </div>
+        </div>
+
+        <div class="species-card">
+          <div class="species-emoji">&#x1F426;</div>
+          <div class="species-info">
+            <div class="species-name">California Scrub-Jay <span class="species-badge badge-common">Common</span></div>
+            <div class="species-sci">Aphelocoma californica</div>
+            <div class="species-fact">Remembers thousands of acorn hiding spots months later!</div>
+          </div>
+        </div>
+
+        <div class="species-card" style="border: 1px solid #ffcdd2;">
+          <div class="species-emoji">&#x1F426;</div>
+          <div class="species-info">
+            <div class="species-name">European Starling <span class="species-badge badge-invasive">Invasive</span></div>
+            <div class="species-sci">Sturnus vulgaris</div>
+            <div class="species-fact">100 released in 1890 &rarr; 200M+ today. Threatens native nesters.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="species-footer">WildEars auto-flags invasive &amp; rare species when detected</div>
+    </div>
+
+    <!-- ── Panel 3: Invasive Deep-Dive + Try It ───────────────── -->
+    <div class="panel panel-action">
+      <div class="alert-header">
+        <h3>&#x26A0; Invasive Species: Why It Matters</h3>
+        <p>The story of the European Starling</p>
+      </div>
+
+      <div class="invasive-box">
+        <div class="inv-name">&#x1F426; European Starling</div>
+        <div class="inv-sci">Sturnus vulgaris</div>
+        <div class="inv-text">
+          In 1890&ndash;91, <strong>100 starlings</strong> were released in New York's Central Park by a group wanting every bird mentioned by Shakespeare in America. Today, over <strong>200 million</strong> span the continent.
+        </div>
+        <div class="inv-text">
+          They aggressively <strong>outcompete native cavity-nesting birds</strong> like bluebirds, woodpeckers, and swallows for nest sites &mdash; a major threat to Sacramento's native species.
+        </div>
+        <div class="inv-stat-row">
+          <div class="inv-stat">
+            <div class="num">100</div>
+            <div class="label">Released 1890</div>
+          </div>
+          <div class="inv-stat">
+            <div class="num">200M+</div>
+            <div class="label">Today</div>
+          </div>
+          <div class="inv-stat">
+            <div class="num">$800M</div>
+            <div class="label">Crop Damage/yr</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="impact-title">Impact on Native Wildlife</div>
+      <ul class="impact-list">
+        <li>Takes nest cavities from bluebirds, woodpeckers &amp; swallows</li>
+        <li>Spreads diseases to native bird populations</li>
+        <li>Massive flocks displace native species from roosting sites</li>
+      </ul>
+
+      <div class="help-box">
+        <h4>&#x1F4A1; How WildEars Helps</h4>
+        <p>WildEars <strong>automatically flags invasive species</strong> when detected. Communities can track where starlings are heard, share data with wildlife managers, and support native species through nest box programs.</p>
+      </div>
+
+      <div class="try-section">
+        <div class="try-title">&#x1F4F1; Try It Now &mdash; It's Free!</div>
+        <div class="qr-placeholder">
+          <span class="qr-icon">&#x1F4F1;</span>
+          <span>[ QR Code ]</span>
+        </div>
+        <div class="try-url">roopreddy.github.io/wildears</div>
+        <div class="try-footer">
+          No app download &middot; No sign-up &middot; Works on any device<br>
+          Audio never leaves your device &mdash; 100% private
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</body>
+</html>
