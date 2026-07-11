@@ -37,13 +37,16 @@ async function initialize() {
 
     postMessage({ type: 'init_progress', progress: 15, status: 'Setting up audio processing...' });
 
-    // Load and register the custom MelSpecLayer + STFT kernel
+    // Load and register the custom MelSpecLayer
     importScripts('mel-spec-layer.js');
-    registerSTFTKernel(tf);
     tf.serialization.registerClass(MelSpecLayerSimple);
 
-    // Set WebGL backend
-    await tf.setBackend('webgl');
+    // Use best available backend (webgl > wasm > cpu)
+    try {
+      await tf.setBackend('webgl');
+    } catch {
+      await tf.setBackend('cpu');
+    }
     await tf.ready();
 
     postMessage({ type: 'init_progress', progress: 25, status: 'Loading BirdNET model...' });
