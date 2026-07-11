@@ -208,6 +208,10 @@ body {
   margin: 0 auto;
 }
 
+#panel-map {
+  max-width: 800px;
+}
+
 .tab-panel.active {
   display: block;
   animation: fadeIn 0.2s ease;
@@ -864,6 +868,106 @@ body {
   border-left: 4px solid var(--sky-blue);
 }
 
+/* ── Location Status ─────────────────────────────────────────────────────── */
+.location-status {
+  font-size: 0.75rem;
+  color: var(--gray-400);
+  margin-top: 0.5rem;
+}
+
+/* ── Species Alerts (invasive/rare auto-flag) ────────────────────────────── */
+.species-alert {
+  font-size: 0.8rem;
+  font-weight: 500;
+  padding: 0.5rem 0.75rem;
+  border-radius: var(--radius-sm);
+  margin-bottom: 0.5rem;
+}
+
+.alert-invasive {
+  background: #f8d7da;
+  color: #721c24;
+  border-left: 4px solid #dc3545;
+}
+
+.alert-rare {
+  background: #cce5ff;
+  color: #004085;
+  border-left: 4px solid #0d6efd;
+}
+
+/* ── Map Panel ───────────────────────────────────────────────────────────── */
+.map-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--green-dark);
+  margin-bottom: 0.25rem;
+}
+
+.map-hint {
+  font-size: 0.8rem;
+  color: var(--gray-600);
+  margin-bottom: 0.75rem;
+}
+
+.sighting-map {
+  width: 100%;
+  height: 350px;
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  z-index: 1;
+}
+
+.map-legend {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-top: 0.75rem;
+  padding: 0.5rem 0.75rem;
+  background: var(--white);
+  border-radius: var(--radius-sm);
+  font-size: 0.75rem;
+  color: var(--gray-600);
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 1.5px solid white;
+  box-shadow: 0 0 2px rgba(0,0,0,0.3);
+  flex-shrink: 0;
+}
+
+.map-marker-custom {
+  background: transparent !important;
+  border: none !important;
+}
+
+/* ── Log location pin ────────────────────────────────────────────────────── */
+.log-location-pin {
+  font-size: 0.8rem;
+  cursor: default;
+}
+
+/* ── Share button ────────────────────────────────────────────────────────── */
+.log-action-btn.share {
+  background: var(--green-mid);
+  color: var(--white);
+  border-color: var(--green-mid);
+}
+
+.log-action-btn.share:hover {
+  background: var(--green-dark);
+}
+
 /* ── Footer ──────────────────────────────────────────────────────────────── */
 .app-footer {
   text-align: center;
@@ -895,6 +999,12 @@ body {
   }
 }
 
+@media (min-width: 480px) {
+  .sighting-map {
+    height: 400px;
+  }
+}
+
 @media (min-width: 640px) {
   .app-header {
     padding: 1.5rem;
@@ -906,6 +1016,10 @@ body {
 
   .tab-panel {
     padding: 1.5rem;
+  }
+
+  .sighting-map {
+    height: 450px;
   }
 
   .record-btn {

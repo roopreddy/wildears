@@ -14,7 +14,7 @@ const Storage = (() => {
     }
   }
 
-  function saveSighting(detection) {
+  function saveSighting(detection, location) {
     const sightings = getSightings();
     const sighting = {
       id: Date.now() + '_' + Math.random().toString(36).slice(2, 8),
@@ -23,11 +23,15 @@ const Storage = (() => {
       confidence: detection.confidence,
       date: new Date().toISOString(),
       timestamp: Date.now(),
-      location: detection.location || null
+      location: location || detection.location || null
     };
     sightings.unshift(sighting); // newest first
     localStorage.setItem(STORAGE_KEY, JSON.stringify(sightings));
     return sighting;
+  }
+
+  function getSightingsWithLocation() {
+    return getSightings().filter(s => s.location && s.location.lat && s.location.lng);
   }
 
   function deleteSighting(id) {
@@ -81,5 +85,5 @@ const Storage = (() => {
     return true;
   }
 
-  return { getSightings, saveSighting, deleteSighting, clearAll, getStats, exportCSV, downloadCSV };
+  return { getSightings, getSightingsWithLocation, saveSighting, deleteSighting, clearAll, getStats, exportCSV, downloadCSV };
 })();

@@ -1,7 +1,7 @@
 /**
  * WildEars — Main Application Controller
- * Wires together the recorder, identifier, species DB, and storage modules.
- * Manages UI state, navigation, and user interactions.
+ * Wires together the recorder, identifier, species DB, storage, and map modules.
+ * Manages UI state, navigation, geolocation, and user interactions.
  */
 const App = (() => {
   // ── State ─────────────────────────────────────────────────────────────────
@@ -10,8 +10,10 @@ const App = (() => {
   let recordingTimer = null;
   let recordingStartTime = 0;
   let lastDetections = [];
+  let currentLocation = null;
+  let watchingLocation = false;
 
-  // ── DOM references (populated in init) ────────────────────────────────────
+  // ── DOM references ────────────────────────────────────────────────────────
   const $ = (id) => document.getElementById(id);
 
   // ── Initialization ────────────────────────────────────────────────────────
@@ -20,8 +22,10 @@ const App = (() => {
     setupRecordButton();
     setupUploadButton();
     setupLogControls();
+    setupShareButton();
     renderLog();
     updateLogBadge();
+    startGeolocation();
 
     // Initialize the BirdNET model
     Identifier.init({
@@ -32,12 +36,47 @@ const App = (() => {
     });
   }
 
+  // ── Geolocation ─────────────────────────────────────────────────────────
+  function startGeolocation() {
+    if (!navigator.geolocation) {
+      updateLocationStatus('Location not available');
+      return;
+    }
+
+    updateLocationStatus('Getting location...');
+
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        currentLocation = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+        updateLocationStatus('Location: ' + currentLocation.lat.toFixed(4) + ', ' + currentLocation.lng.toFixed(4));
+      },
+      (err) => {
+        updateLocationStatus('Location unavailable');
+      },
+      { enableHighAccuracy: true, timeout: 10000 }
+    );
+
+    // Keep watching for location updates
+    navigator.geolocation.watchPosition(
+      (pos) => {
+        currentLocation = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+        updateLocationStatus('Location: ' + currentLocation.lat.toFixed(4) + ', ' + currentLocation.lng.toFixed(4));
+      },
+      () => {},
+      { enableHighAccuracy: true }
+    );
+  }
+
+  function updateLocationStatus(text) {
+    const el = $('location-status');
+    if (el) el.textContent = text;
+  }
+
   // ── Tab Navigation ────────────────────────────────────────────────────────
   function setupTabs() {
     document.querySelectorAll('.tab-btn').forEach(btn => {
       btn.addEventListener('click', () => {
-        const tab = btn.dataset.tab;
-        switchTab(tab);
+        switchTab(btn.dataset.tab);
       });
     });
   }
@@ -50,6 +89,15 @@ const App = (() => {
     document.querySelectorAll('.tab-panel').forEach(panel => {
       panel.classList.toggle('active', panel.id === 'panel-' + tab);
     });
+
+    if (tab === 'map') {
+      SightingMap.init('sighting-map');
+      SightingMap.invalidateSize();
+      SightingMap.refresh();
+    }
+    if (tab === 'log') {
+      renderLog();
+    }
   }
 
   // ── Model Loading ─────────────────────────────────────────────────────────
@@ -112,12 +160,9 @@ const App = (() => {
       if (timer) timer.classList.remove('hidden');
       if (wave) wave.classList.remove('hidden');
 
-      // Update timer display
       recordingTimer = setInterval(() => {
         const elapsed = ((Date.now() - recordingStartTime) / 1000).toFixed(1);
         if (timer) timer.textContent = elapsed + 's / 3.0s';
-
-        // Auto-stop after 3 seconds
         if (elapsed >= 3.0) {
           stopRecording();
         }
@@ -157,14 +202,10 @@ const App = (() => {
 
     if (!area || !input) return;
 
-    // Click to upload
     area.addEventListener('click', () => {
-      if (!area.classList.contains('disabled')) {
-        input.click();
-      }
+      if (!area.classList.contains('disabled')) input.click();
     });
 
-    // Drag and drop
     area.addEventListener('dragover', (e) => {
       e.preventDefault();
       area.classList.add('drag-over');
@@ -177,22 +218,18 @@ const App = (() => {
     area.addEventListener('drop', (e) => {
       e.preventDefault();
       area.classList.remove('drag-over');
-      if (e.dataTransfer.files.length > 0) {
-        handleFile(e.dataTransfer.files[0]);
-      }
+      if (e.dataTransfer.files.length > 0) handleFile(e.dataTransfer.files[0]);
     });
 
-    // File input change
     input.addEventListener('change', () => {
       if (input.files.length > 0) {
         handleFile(input.files[0]);
-        input.value = ''; // Reset for re-upload
+        input.value = '';
       }
     });
   }
 
   async function handleFile(file) {
-    // Validate file type
     const validTypes = ['audio/wav', 'audio/x-wav', 'audio/mpeg', 'audio/mp3',
                         'audio/ogg', 'audio/flac', 'audio/x-flac', 'audio/webm',
                         'audio/mp4', 'audio/aac'];
@@ -253,9 +290,10 @@ const App = (() => {
     if (noResults) noResults.classList.add('hidden');
     if (list) {
       list.innerHTML = detections.map((d, i) => createResultCard(d, i)).join('');
+
       // Attach save button listeners
       list.querySelectorAll('.save-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
+        btn.addEventListener('click', () => {
           const idx = parseInt(btn.dataset.index);
           saveSighting(detections[idx]);
           btn.textContent = 'Saved!';
@@ -263,6 +301,7 @@ const App = (() => {
           btn.classList.add('saved');
         });
       });
+
       // Attach info toggle listeners
       list.querySelectorAll('.info-toggle').forEach(btn => {
         btn.addEventListener('click', () => {
@@ -274,6 +313,9 @@ const App = (() => {
           }
         });
       });
+
+      // Auto-flag invasive or rare species
+      checkSpeciesAlerts(detections);
     }
   }
 
@@ -282,9 +324,16 @@ const App = (() => {
     const confClass = detection.confidence >= 0.7 ? 'high' :
                       detection.confidence >= 0.4 ? 'medium' : 'low';
 
-    // Look up species info from our local database
     const info = SpeciesDB.getInfo(detection.commonName);
     const statusLabel = info ? SpeciesDB.getStatusLabel(info.status) : null;
+
+    // Auto-flag alert banner for invasive/rare
+    let alertBanner = '';
+    if (info && info.status === 'invasive') {
+      alertBanner = `<div class="species-alert alert-invasive">Invasive species detected! Consider reporting to local wildlife authorities.</div>`;
+    } else if (info && info.status === 'rare') {
+      alertBanner = `<div class="species-alert alert-rare">Rare species detected! This is a notable sighting worth documenting.</div>`;
+    }
 
     let infoSection = '';
     if (info) {
@@ -304,6 +353,7 @@ const App = (() => {
 
     return `
       <div class="result-card" data-index="${index}">
+        ${alertBanner}
         <div class="result-header">
           <div class="result-rank">#${index + 1}</div>
           <div class="result-names">
@@ -327,11 +377,29 @@ const App = (() => {
     `;
   }
 
+  // ── Auto-flag alerts for invasive/rare species ────────────────────────────
+  function checkSpeciesAlerts(detections) {
+    detections.forEach(d => {
+      const info = SpeciesDB.getInfo(d.commonName);
+      if (!info) return;
+      if (d.confidence < 0.3) return; // Only alert for reasonable confidence
+
+      if (info.status === 'invasive') {
+        showNotification('Invasive species alert: ' + d.commonName + ' detected!', 'error');
+      } else if (info.status === 'rare') {
+        showNotification('Rare species spotted: ' + d.commonName + '!', 'info');
+      }
+    });
+  }
+
   // ── Sighting Log ──────────────────────────────────────────────────────────
   function saveSighting(detection) {
-    Storage.saveSighting(detection);
+    Storage.saveSighting(detection, currentLocation);
     updateLogBadge();
-    showNotification(detection.commonName + ' saved to your log!', 'success');
+    const locStr = currentLocation
+      ? ' (location saved)'
+      : ' (no location)';
+    showNotification(detection.commonName + ' saved to your log!' + locStr, 'success');
   }
 
   function setupLogControls() {
@@ -379,9 +447,11 @@ const App = (() => {
     if (empty) empty.classList.add('hidden');
     if (stats) {
       stats.classList.remove('hidden');
+      const withLoc = Storage.getSightingsWithLocation().length;
       stats.innerHTML = `
         <span><strong>${sightingStats.totalSightings}</strong> sightings</span>
         <span><strong>${sightingStats.uniqueSpecies}</strong> unique species</span>
+        <span><strong>${withLoc}</strong> with location</span>
       `;
     }
 
@@ -392,6 +462,7 @@ const App = (() => {
       const conf = (s.confidence * 100).toFixed(0);
       const info = SpeciesDB.getInfo(s.commonName);
       const statusLabel = info ? SpeciesDB.getStatusLabel(info.status) : null;
+      const hasLoc = s.location && s.location.lat;
 
       return `
         <div class="log-entry">
@@ -402,7 +473,8 @@ const App = (() => {
             </div>
             <div class="log-meta">
               <span class="log-date">${dateStr} ${timeStr}</span>
-              <span class="log-confidence">${conf}% confidence</span>
+              <span class="log-confidence">${conf}%</span>
+              ${hasLoc ? `<span class="log-location-pin" title="${s.location.lat.toFixed(4)}, ${s.location.lng.toFixed(4)}">&#x1F4CD;</span>` : ''}
             </div>
           </div>
           <button class="log-delete-btn" data-id="${s.id}" title="Delete sighting">&times;</button>
@@ -410,7 +482,6 @@ const App = (() => {
       `;
     }).join('');
 
-    // Attach delete listeners
     container.querySelectorAll('.log-delete-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         Storage.deleteSighting(btn.dataset.id);
@@ -427,10 +498,35 @@ const App = (() => {
       badge.textContent = stats.uniqueSpecies;
       badge.classList.toggle('hidden', stats.uniqueSpecies === 0);
     }
-    // Also update the log tab when switching to it
-    if (currentTab === 'log') {
-      renderLog();
-    }
+    if (currentTab === 'log') renderLog();
+  }
+
+  // ── Share ─────────────────────────────────────────────────────────────────
+  function setupShareButton() {
+    const btn = $('share-btn');
+    if (!btn) return;
+
+    btn.addEventListener('click', () => {
+      const stats = Storage.getStats();
+      if (stats.totalSightings === 0) {
+        showNotification('No sightings to share yet', 'info');
+        return;
+      }
+
+      const text = `I've identified ${stats.uniqueSpecies} unique species with WildEars! 🎧🐦\n` +
+                   `Species: ${stats.speciesList.slice(0, 5).join(', ')}${stats.speciesList.length > 5 ? '...' : ''}\n` +
+                   `Try it free: ${window.location.href}`;
+
+      if (navigator.share) {
+        navigator.share({ title: 'WildEars Sightings', text }).catch(() => {});
+      } else {
+        navigator.clipboard.writeText(text).then(() => {
+          showNotification('Sighting summary copied to clipboard!', 'success');
+        }).catch(() => {
+          showNotification('Could not copy to clipboard', 'error');
+        });
+      }
+    });
   }
 
   // ── Notifications ─────────────────────────────────────────────────────────
@@ -443,35 +539,17 @@ const App = (() => {
     el.textContent = message;
     container.appendChild(el);
 
-    // Animate in
     requestAnimationFrame(() => el.classList.add('show'));
 
-    // Remove after 3 seconds
     setTimeout(() => {
       el.classList.remove('show');
       setTimeout(() => el.remove(), 300);
     }, 3000);
   }
 
-  // ── Tab switching hook to refresh log ──────────────────────────────────────
-  const origSwitchTab = switchTab;
-
-  // Override to refresh log when switching to log tab
-  function setupTabRefresh() {
-    document.querySelectorAll('.tab-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        if (btn.dataset.tab === 'log') {
-          renderLog();
-        }
-      });
-    });
-  }
-
-  // ── Public API ────────────────────────────────────────────────────────────
   return { init };
 })();
 
-// Start the app when the page loads
 document.addEventListener('DOMContentLoaded', () => {
   App.init();
 });
