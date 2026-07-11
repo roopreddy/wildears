@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="WildEars — Record a sound, get a species. A free website that turns anyone's phone into a biodiversity survey tool.">
+  <meta name="theme-color" content="#1a472a">
+  <title>WildEars — Wildlife Sound Identifier</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <!-- ── Header ──────────────────────────────────────────────────────────── -->
+  <header class="app-header">
+    <h1 class="app-title">
+      <span class="icon" aria-hidden="true">&#x1F3A7;</span>
+      WildEars
+    </h1>
+    <p class="app-subtitle">Record a sound, get a species</p>
+  </header>
+
+  <!-- ── Model Loading Progress ──────────────────────────────────────────── -->
+  <div id="model-loading" class="model-loading">
+    <p id="model-status-text" class="model-status-text">Preparing sound identification...</p>
+    <div class="progress-track">
+      <div id="model-progress-bar" class="progress-bar"></div>
+    </div>
+  </div>
+  <div id="model-ready" class="model-ready hidden"></div>
+
+  <!-- ── Tab Navigation ──────────────────────────────────────────────────── -->
+  <nav class="tab-bar">
+    <button class="tab-btn active" data-tab="listen">
+      <span aria-hidden="true">&#x1F3A4;</span> Listen
+    </button>
+    <button class="tab-btn" data-tab="log">
+      <span aria-hidden="true">&#x1F4CB;</span> Log
+      <span id="log-badge" class="tab-badge hidden">0</span>
+    </button>
+    <button class="tab-btn" data-tab="info">
+      <span aria-hidden="true">&#x2139;&#xFE0F;</span> About
+    </button>
+  </nav>
+
+  <!-- ── Listen Panel ────────────────────────────────────────────────────── -->
+  <div id="panel-listen" class="tab-panel active">
+
+    <!-- Record Button -->
+    <div class="record-section">
+      <button id="record-btn" class="record-btn" disabled>
+        <span class="btn-icon" aria-hidden="true">&#x1F3A4;</span>
+        <span class="btn-text">Record</span>
+      </button>
+      <div id="recording-timer" class="recording-timer hidden">0.0s / 3.0s</div>
+      <div id="recording-wave" class="recording-wave hidden">
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+      </div>
+      <p class="record-hint">Press to record 3 seconds of wildlife sound</p>
+    </div>
+
+    <!-- Divider -->
+    <div class="divider">or upload a file</div>
+
+    <!-- Upload Area -->
+    <div id="upload-area" class="upload-area disabled">
+      <div class="upload-icon" aria-hidden="true">&#x1F4C1;</div>
+      <p class="upload-text">Drop an audio file here or click to browse</p>
+      <p class="upload-formats">WAV, MP3, OGG, FLAC, WebM</p>
+      <p id="upload-file-name" class="upload-file-name hidden"></p>
+    </div>
+    <input type="file" id="file-input" accept="audio/*,.wav,.mp3,.ogg,.flac,.webm,.m4a" class="sr-only">
+
+    <!-- Results -->
+    <div id="results-section" class="results-section hidden">
+      <h2 class="results-heading">Identification Results</h2>
+
+      <div id="analyzing-indicator" class="analyzing-indicator hidden">
+        <div class="spinner"></div>
+        <span>Analyzing sound...</span>
+      </div>
+
+      <div id="no-results" class="no-results hidden">
+        <p>No species detected above the confidence threshold. Try recording in a quieter area, or get closer to the sound source.</p>
+      </div>
+
+      <div id="results-list"></div>
+    </div>
+  </div>
+
+  <!-- ── Log Panel ───────────────────────────────────────────────────────── -->
+  <div id="panel-log" class="tab-panel">
+    <div class="log-header">
+      <h2 class="log-title">Species Heard Here</h2>
+      <div class="log-actions">
+        <button id="export-btn" class="log-action-btn">Export CSV</button>
+        <button id="clear-log-btn" class="log-action-btn danger">Clear All</button>
+      </div>
+    </div>
+
+    <div id="log-stats" class="log-stats hidden"></div>
+
+    <div id="log-empty" class="log-empty">
+      <div class="log-empty-icon" aria-hidden="true">&#x1F426;</div>
+      <p class="log-empty-text">No sightings yet. Go to the Listen tab to identify your first species!</p>
+    </div>
+
+    <div id="log-list"></div>
+  </div>
+
+  <!-- ── Info Panel ──────────────────────────────────────────────────────── -->
+  <div id="panel-info" class="tab-panel info-section">
+
+    <div class="info-card">
+      <h3>What is WildEars?</h3>
+      <p>WildEars turns your phone or computer into a biodiversity survey tool. Record or upload a wildlife sound, and our AI identifies the species for you. Save your sightings to build a "Species Heard Here" list that you can share with parks, teachers, or scientists.</p>
+    </div>
+
+    <div class="info-card">
+      <h3>How does it work?</h3>
+      <p>WildEars uses the <a href="https://birdnet.cornell.edu/" target="_blank" rel="noopener">BirdNET</a> machine learning model from the Cornell Lab of Ornithology and Chemnitz University of Technology. The AI runs entirely in your browser — your audio never leaves your device.</p>
+      <p style="margin-top: 0.5rem;">The model analyzes 3-second audio clips, computes a spectrogram (a visual representation of sound frequencies), and compares it against patterns learned from thousands of recordings.</p>
+    </div>
+
+    <div class="info-card">
+      <h3>Honest Limitations</h3>
+      <ul class="limitation-list">
+        <li>Results show <strong>likely</strong> species, not certainty. Always allow for expert confirmation.</li>
+        <li>Works best for <strong>birds</strong>. Frogs, bats, and insects are harder to identify and may need a different tool.</li>
+        <li>Needs an <strong>internet connection</strong> to download the AI model the first time (after that it's cached).</li>
+        <li>Background noise (wind, traffic, multiple species) reduces accuracy.</li>
+        <li>Confidence scores below 50% should be treated as educated guesses.</li>
+      </ul>
+    </div>
+
+    <div class="info-card">
+      <h3>Tips for Best Results</h3>
+      <ul class="limitation-list">
+        <li>Record in a quiet area, as close to the animal as safely possible.</li>
+        <li>Keep recordings to a single species call if possible.</li>
+        <li>Morning (dawn chorus) is the best time for bird identification.</li>
+        <li>Hold your phone steady — rustling and handling noise can confuse the AI.</li>
+      </ul>
+    </div>
+
+    <div class="info-card">
+      <h3>About This Project</h3>
+      <p>WildEars is a FIRST LEGO League Innovation Project for the 2026-27 BIOGLOW season. It pairs with our "Listening to the Wild" physical recorder to make biodiversity monitoring accessible to everyone — for free.</p>
+      <p style="margin-top: 0.5rem;">Built with input from local wildlife experts in the Sacramento area, including the Effie Yeaw Nature Center and Sacramento Audubon Society.</p>
+    </div>
+  </div>
+
+  <!-- ── Notifications Container ─────────────────────────────────────────── -->
+  <div id="notifications" class="notifications"></div>
+
+  <!-- ── Footer ──────────────────────────────────────────────────────────── -->
+  <footer class="app-footer">
+    <p>Sound identification powered by <a href="https://birdnet.cornell.edu/" target="_blank" rel="noopener">BirdNET</a> (Cornell Lab of Ornithology &amp; Chemnitz University of Technology)</p>
+    <p>Model licensed under CC BY-SA 4.0 &middot; WildEars &copy; 2026 BIOGLOW FLL Team</p>
+  </footer>
+
+  <!-- ── Scripts ─────────────────────────────────────────────────────────── -->
+  <script src="js/species-db.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/recorder.js"></script>
+  <script src="js/identifier.js"></script>
+  <script src="js/app.js"></script>
+
+</body>
+</html>
