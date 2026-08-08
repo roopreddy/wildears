@@ -295,6 +295,54 @@
       font-style: italic;
     }
 
+    /* Also local wildlife */
+    .also-local {
+      margin-top: 0.08in;
+      background: white;
+      border-radius: 8px;
+      padding: 0.07in 0.09in;
+    }
+    .also-local-title {
+      font-size: 0.5rem;
+      font-weight: 700;
+      color: var(--green-dark);
+      margin-bottom: 0.04in;
+      border-bottom: 1px solid var(--green-pale);
+      padding-bottom: 2px;
+    }
+    .also-local-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4px;
+    }
+    .also-card {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .also-emoji { font-size: 0.85rem; min-width: 18px; }
+    .also-info {}
+    .also-name {
+      font-size: 0.44rem;
+      font-weight: 700;
+      color: var(--green-dark);
+      line-height: 1.2;
+    }
+    .also-fact {
+      font-size: 0.38rem;
+      color: #666;
+      line-height: 1.2;
+    }
+    .badge-invasive-sm {
+      font-size: 0.32rem;
+      padding: 0px 4px;
+      border-radius: 4px;
+      background: #f8d7da;
+      color: #721c24;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
     /* ══════════════════════════════════════════════════════════════
        PANEL 3 — Invasive Species + Try It
        ══════════════════════════════════════════════════════════════ */
@@ -646,6 +694,54 @@
             <div class="species-name">European Starling <span class="species-badge badge-invasive">Invasive</span></div>
             <div class="species-sci">Sturnus vulgaris</div>
             <div class="species-fact">100 released in 1890 &rarr; 200M+ today. Threatens native nesters.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="also-local">
+        <div class="also-local-title">&#x1F43E; Other Sacramento-Area Wildlife</div>
+        <div class="also-local-grid">
+          <div class="also-card">
+            <div class="also-emoji">&#x1F438;</div>
+            <div class="also-info">
+              <div class="also-name">Pacific Treefrog</div>
+              <div class="also-fact">Iconic chorus at ponds &amp; wetlands after rain</div>
+            </div>
+          </div>
+          <div class="also-card">
+            <div class="also-emoji">&#x1F43A;</div>
+            <div class="also-info">
+              <div class="also-name">Coyote</div>
+              <div class="also-fact">Howls at dusk along the American River Parkway</div>
+            </div>
+          </div>
+          <div class="also-card">
+            <div class="also-emoji">&#x1F438;</div>
+            <div class="also-info">
+              <div class="also-name">American Bullfrog <span class="badge-invasive-sm">Invasive</span></div>
+              <div class="also-fact">Deep "jug-o-rum" call; threatens native frogs</div>
+            </div>
+          </div>
+          <div class="also-card">
+            <div class="also-emoji">&#x1F98A;</div>
+            <div class="also-info">
+              <div class="also-name">Red Fox</div>
+              <div class="also-fact">Eerie bark &amp; screams heard near parks at night</div>
+            </div>
+          </div>
+          <div class="also-card">
+            <div class="also-emoji">&#x1F987;</div>
+            <div class="also-info">
+              <div class="also-name">Mexican Free-tailed Bat</div>
+              <div class="also-fact">Millions roost under bridges in summer</div>
+            </div>
+          </div>
+          <div class="also-card">
+            <div class="also-emoji">&#x1F9A6;</div>
+            <div class="also-info">
+              <div class="also-name">River Otter</div>
+              <div class="also-fact">Chirps &amp; whistles along the American River</div>
+            </div>
           </div>
         </div>
       </div>

@@ -1,0 +1,38 @@
+{
+  "name": "WildEars — Wildlife Sound Identifier",
+  "short_name": "WildEars",
+  "description": "Record a sound, get a species. Free AI-powered wildlife sound identification for birds, frogs, coyotes, and more.",
+  "start_url": "/wildears/",
+  "scope": "/wildears/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#1a472a",
+  "theme_color": "#1a472a",
+  "lang": "en-US",
+  "categories": ["education", "lifestyle", "utilities"],
+  "icons": [
+    {
+      "src": "icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [],
+  "shortcuts": [
+    {
+      "name": "Identify a Sound",
+      "short_name": "Identify",
+      "description": "Go straight to the recording screen",
+      "url": "/wildears/#listen",
+      "icons": [{ "src": "icons/icon.svg", "sizes": "any" }]
+    },
+    {
+      "name": "View Sighting Map",
+      "short_name": "Map",
+      "description": "See your saved sightings on the map",
+      "url": "/wildears/#map",
+      "icons": [{ "src": "icons/icon.svg", "sizes": "any" }]
+    }
+  ]
+}

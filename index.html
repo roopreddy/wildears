@@ -6,6 +6,20 @@
   <meta name="description" content="WildEars — Record a sound, get a species. A free website that turns anyone's phone into a biodiversity survey tool.">
   <meta name="theme-color" content="#1a472a">
   <title>WildEars — Wildlife Sound Identifier</title>
+
+  <!-- PWA Manifest -->
+  <link rel="manifest" href="manifest.json">
+
+  <!-- iOS PWA support -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="WildEars">
+  <link rel="apple-touch-icon" href="icons/icon.svg">
+
+  <!-- Android / Chrome PWA -->
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="application-name" content="WildEars">
+
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
   <link rel="stylesheet" href="css/styles.css">
 </head>
@@ -189,6 +203,16 @@
   <script src="js/identifier.js"></script>
   <script src="js/map.js"></script>
   <script src="js/app.js"></script>
+
+  <!-- Service Worker Registration (PWA) -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/wildears/sw.js', { scope: '/wildears/' })
+          .catch(err => console.warn('SW registration failed:', err));
+      });
+    }
+  </script>
 
 </body>
 </html>

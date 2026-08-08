@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- Background -->
+  <rect width="512" height="512" rx="112" fill="#1a472a"/>
+
+  <!-- Outer circle ring -->
+  <circle cx="256" cy="220" r="130" fill="none" stroke="#52b788" stroke-width="18"/>
+
+  <!-- Headphone arc -->
+  <path d="M140 220 C140 130 372 130 372 220" fill="none" stroke="#d8f3dc" stroke-width="28" stroke-linecap="round"/>
+
+  <!-- Left ear cup -->
+  <rect x="108" y="200" width="52" height="80" rx="26" fill="#52b788"/>
+
+  <!-- Right ear cup -->
+  <rect x="352" y="200" width="52" height="80" rx="26" fill="#52b788"/>
+
+  <!-- Sound waves left -->
+  <path d="M88 240 Q72 256 88 272" fill="none" stroke="#52b788" stroke-width="12" stroke-linecap="round" opacity="0.7"/>
+  <path d="M64 224 Q40 256 64 288" fill="none" stroke="#52b788" stroke-width="10" stroke-linecap="round" opacity="0.45"/>
+
+  <!-- Sound waves right -->
+  <path d="M424 240 Q440 256 424 272" fill="none" stroke="#52b788" stroke-width="12" stroke-linecap="round" opacity="0.7"/>
+  <path d="M448 224 Q472 256 448 288" fill="none" stroke="#52b788" stroke-width="10" stroke-linecap="round" opacity="0.45"/>
+
+  <!-- Bird silhouette on top -->
+  <path d="M220 148 Q240 128 256 140 Q272 128 292 148 Q270 155 256 150 Q242 155 220 148Z" fill="#d8f3dc" opacity="0.9"/>
+
+  <!-- Text: WildEars -->
+  <text x="256" y="378" font-family="'Segoe UI', Arial, sans-serif" font-size="52" font-weight="800"
+        fill="#d8f3dc" text-anchor="middle" letter-spacing="2">WildEars</text>
+
+  <!-- Tagline -->
+  <text x="256" y="418" font-family="'Segoe UI', Arial, sans-serif" font-size="26"
+        fill="#52b788" text-anchor="middle" letter-spacing="1">Sound · Species · Science</text>
+</svg>
