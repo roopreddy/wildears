@@ -110,7 +110,7 @@ async function predict(audioFloat32) {
       .map((sp, i) => ({ ...sp, confidence: probs[i] }))
       .filter(d => d.confidence >= CONFIDENCE_THRESHOLD)
       .sort((a, b) => b.confidence - a.confidence)
-      .slice(0, 5);
+      .slice(0, 1);
 
     postMessage({ type: 'result', detections });
   } catch (err) {
