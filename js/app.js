@@ -283,6 +283,10 @@ const App = (() => {
 
   function handleResults(detections) {
     hideAnalyzing();
+    // Mammal mode: show only the single best match
+    if (mammalMode && detections && detections.length > 1) {
+      detections = detections.slice(0, 1);
+    }
     lastDetections = detections;
 
     const list = $('results-list');
