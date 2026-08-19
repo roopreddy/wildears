@@ -85,19 +85,29 @@ async function predict(audioFloat32) {
   }
 
   try {
-    const results = await tf.tidy(() => {
+    const cleaned = tf.tidy(() => {
       const audio = tf.tensor1d(audioFloat32);
+      const n     = audio.shape[0];
 
-      // Normalize to [-1, 1]
-      const peak = tf.max(tf.abs(audio));
-      const norm = tf.div(audio, tf.maximum(peak, 1e-6));
+      // 1. Remove DC offset (mic bias / handling noise)
+      const mean     = tf.mean(audio);
+      const demeaned = tf.sub(audio, mean);
 
-      return norm;
+      // 2. Pre-emphasis filter: y[n] = x[n] - 0.97 * x[n-1]
+      //    Boosts animal call frequencies, suppresses low-frequency rumble
+      //    and wind noise that would otherwise confuse YAMNet.
+      const shifted  = tf.concat([tf.zeros([1]), demeaned.slice(0, n - 1)]);
+      const emph     = tf.sub(demeaned, tf.mul(shifted, 0.97));
+
+      // 3. Peak-normalize to [-1, 1] and hard-clip for safety
+      const peak = tf.max(tf.abs(emph));
+      const norm = tf.div(emph, tf.maximum(peak, 1e-6));
+      return tf.clipByValue(norm, -1, 1);
     });
 
     // Extract YAMNet embedding
-    const embedding = await getEmbedding(results);
-    results.dispose();
+    const embedding = await getEmbedding(cleaned);
+    cleaned.dispose();
 
     // Run our classifier
     const probTensor = classifier.predict(embedding.expandDims(0));
