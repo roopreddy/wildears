@@ -1,0 +1,15 @@
+# Audio training data (too large for git)
+data/
+
+# Trained Keras model files
+model/*.keras
+model/training_history.png
+
+# Keep the TF.js export and labels — needed by the browser
+!model/tfjs/
+!model/labels.json
+
+# Python cache
+__pycache__/
+*.pyc
+.venv/

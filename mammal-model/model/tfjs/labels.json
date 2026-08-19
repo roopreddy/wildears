@@ -1,0 +1,178 @@
+[
+  {
+    "id": 0,
+    "key": "coyote",
+    "commonName": "Coyote",
+    "scientificName": "Canis latrans",
+    "inatTaxonName": "Canis latrans",
+    "status": "native",
+    "description": "Adaptable canid common throughout Sacramento. Howls and yips at dusk.",
+    "habitat": "American River Parkway, suburban edges, open fields",
+    "funFact": "Coyotes can hear a mouse under a foot of snow!"
+  },
+  {
+    "id": 1,
+    "key": "river_otter",
+    "commonName": "River Otter",
+    "scientificName": "Lontra canadensis",
+    "inatTaxonName": "Lontra canadensis",
+    "status": "native",
+    "description": "Playful, semi-aquatic mammal returning to Sacramento waterways.",
+    "habitat": "American River, Sacramento River, Delta",
+    "funFact": "River otters can hold their breath for up to 8 minutes!"
+  },
+  {
+    "id": 2,
+    "key": "raccoon",
+    "commonName": "Raccoon",
+    "scientificName": "Procyon lotor",
+    "inatTaxonName": "Procyon lotor",
+    "status": "native",
+    "description": "Highly adaptable nocturnal mammal. Makes a wide range of chittering and growling sounds.",
+    "habitat": "Suburbs, parks, riparian areas",
+    "funFact": "Raccoons have 5x more sensory cells in their paws than most mammals."
+  },
+  {
+    "id": 3,
+    "key": "mule_deer",
+    "commonName": "Mule Deer",
+    "scientificName": "Odocoileus hemionus",
+    "inatTaxonName": "Odocoileus hemionus",
+    "status": "native",
+    "description": "Large deer with big mule-like ears. Bucks bugle and grunt during rut season.",
+    "habitat": "American River Parkway, oak woodlands, suburban edges",
+    "funFact": "Mule deer can jump 8 feet high and 30 feet in a single bound!"
+  },
+  {
+    "id": 4,
+    "key": "california_ground_squirrel",
+    "commonName": "California Ground Squirrel",
+    "scientificName": "Otospermophilus beecheyi",
+    "inatTaxonName": "Otospermophilus beecheyi",
+    "status": "native",
+    "description": "Very common in open areas. Has a distinctive alarm chirp when predators approach.",
+    "habitat": "Parks, grasslands, levees, roadsides",
+    "funFact": "They can tell the difference between predators by the type of alarm call used!"
+  },
+  {
+    "id": 5,
+    "key": "bobcat",
+    "commonName": "Bobcat",
+    "scientificName": "Lynx rufus",
+    "inatTaxonName": "Lynx rufus",
+    "status": "native",
+    "description": "Secretive wildcat. Makes eerie screams, growls, and caterwauls especially in winter.",
+    "habitat": "American River Parkway, oak woodlands, foothills",
+    "funFact": "Bobcats are rarely seen but surprisingly common in Sacramento's greenbelts."
+  },
+  {
+    "id": 6,
+    "key": "american_beaver",
+    "commonName": "American Beaver",
+    "scientificName": "Castor canadensis",
+    "inatTaxonName": "Castor canadensis",
+    "status": "native",
+    "description": "North America's largest rodent. Famous tail slap on water is a warning sound.",
+    "habitat": "American River, Sacramento River, Delta waterways",
+    "funFact": "Beaver dams create wetland habitat that supports dozens of other species!"
+  },
+  {
+    "id": 7,
+    "key": "feral_pig",
+    "commonName": "Feral Pig",
+    "scientificName": "Sus scrofa",
+    "inatTaxonName": "Sus scrofa",
+    "status": "invasive",
+    "description": "Destructive invasive species spreading into Sacramento foothills. Makes grunts, squeals, and rooting sounds.",
+    "habitat": "Foothills, oak woodlands, agricultural edges",
+    "funFact": "Feral pigs cause over $1.5 billion in US agricultural damage every year."
+  },
+  {
+    "id": 8,
+    "key": "striped_skunk",
+    "commonName": "Striped Skunk",
+    "scientificName": "Mephitis mephitis",
+    "inatTaxonName": "Mephitis mephitis",
+    "status": "native",
+    "description": "Nocturnal omnivore. Makes squealing, churring, and hissing sounds when threatened.",
+    "habitat": "Suburbs, parks, agricultural areas",
+    "funFact": "Skunks can accurately spray a target up to 10 feet away!"
+  },
+  {
+    "id": 9,
+    "key": "red_fox",
+    "commonName": "Red Fox",
+    "scientificName": "Vulpes vulpes",
+    "inatTaxonName": "Vulpes vulpes",
+    "status": "invasive",
+    "description": "Non-native to California's Central Valley. Makes eerie screams, barks, and gekkering calls.",
+    "habitat": "Parks, suburban areas, agricultural edges",
+    "funFact": "The red fox has the widest natural distribution of any wild carnivore on Earth."
+  },
+  {
+    "id": 10,
+    "key": "norway_rat",
+    "commonName": "Norway Rat",
+    "scientificName": "Rattus norvegicus",
+    "inatTaxonName": "Rattus norvegicus",
+    "status": "invasive",
+    "description": "Most common invasive rat in Sacramento. Makes high-pitched squeaks, chattering, and hissing sounds.",
+    "habitat": "Sewers, buildings, dumpsters, riparian areas, farms",
+    "funFact": "Norway rats arrived in North America on European ships in the 1700s and now live on every continent except Antarctica."
+  },
+  {
+    "id": 11,
+    "key": "roof_rat",
+    "commonName": "Roof Rat",
+    "scientificName": "Rattus rattus",
+    "inatTaxonName": "Rattus rattus",
+    "status": "invasive",
+    "description": "Slender, agile rat that climbs trees and nests in roofs. Makes squeaking and chattering sounds.",
+    "habitat": "Attics, trees, gardens, citrus orchards",
+    "funFact": "Roof rats were largely responsible for spreading the Black Plague across Europe via infected fleas."
+  },
+  {
+    "id": 12,
+    "key": "feral_goat",
+    "commonName": "Feral Goat",
+    "scientificName": "Capra hircus",
+    "inatTaxonName": "Capra hircus",
+    "status": "invasive",
+    "description": "Escaped domestic goats gone wild. Makes loud bleating calls. Causes severe damage to native vegetation.",
+    "habitat": "Foothills, rangeland, oak woodlands near agricultural areas",
+    "funFact": "A single feral goat can strip an entire hillside of native plants, accelerating erosion."
+  },
+  {
+    "id": 13,
+    "key": "nutria",
+    "commonName": "Nutria",
+    "scientificName": "Myocastor coypus",
+    "inatTaxonName": "Myocastor coypus",
+    "status": "invasive",
+    "description": "Large South American rodent invading the Sacramento-San Joaquin Delta. Makes pig-like grunts and growls.",
+    "habitat": "Sacramento Delta, wetlands, riverbanks, irrigation channels",
+    "funFact": "Nutria can eat up to 25% of their body weight daily, destroying wetland root systems and causing bank collapse."
+  },
+  {
+    "id": 14,
+    "key": "virginia_opossum",
+    "commonName": "Virginia Opossum",
+    "scientificName": "Didelphis virginiana",
+    "inatTaxonName": "Didelphis virginiana",
+    "status": "invasive",
+    "description": "North America's only marsupial, introduced to California. Makes hissing, clicking, and growling sounds.",
+    "habitat": "Suburbs, parks, riparian areas, farm edges",
+    "funFact": "Opossums are immune to rattlesnake venom and eat thousands of ticks per season."
+  },
+  {
+    "id": 15,
+    "key": "feral_cat",
+    "commonName": "Feral Cat",
+    "scientificName": "Felis catus",
+    "inatTaxonName": "Felis catus",
+    "status": "invasive",
+    "description": "Unowned domestic cats gone wild. Makes yowling, hissing, and caterwauling sounds especially at night.",
+    "habitat": "Suburbs, parks, farms, riparian areas — everywhere",
+    "funFact": "Feral cats kill an estimated 1.3–4 billion birds and 6–22 billion mammals in the US every year."
+  }
+]
