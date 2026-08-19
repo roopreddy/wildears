@@ -21,7 +21,7 @@ importScripts('https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.14.0/dist/tf.min.
 const YAMNET_URL      = 'https://tfhub.dev/google/tfjs-model/yamnet/tfjs/1';
 const CLASSIFIER_URL  = '/wildears/mammal-model/model/tfjs/model.json';
 const LABELS_URL      = '/wildears/mammal-model/model/tfjs/labels.json';
-const CONFIDENCE_THRESHOLD = 0.15;
+const CONFIDENCE_THRESHOLD = 0.40;
 
 let yamnet     = null;
 let classifier = null;
