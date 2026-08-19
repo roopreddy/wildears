@@ -12,6 +12,7 @@ const App = (() => {
   let lastDetections = [];
   let currentLocation = null;
   let watchingLocation = false;
+  let mammalMode = false;
 
   // ── DOM references ────────────────────────────────────────────────────────
   const $ = (id) => document.getElementById(id);
@@ -21,6 +22,7 @@ const App = (() => {
     setupTabs();
     setupRecordButton();
     setupUploadButton();
+    setupModeToggle();
     setupLogControls();
     setupShareButton();
     renderLog();
@@ -191,7 +193,11 @@ const App = (() => {
     const audioData = Recorder.stopRecording();
     if (audioData) {
       showAnalyzing();
-      Identifier.identify(audioData);
+      if (mammalMode) {
+        MammalIdentifier.identify(audioData);
+      } else {
+        Identifier.identify(audioData);
+      }
     }
   }
 
@@ -246,7 +252,11 @@ const App = (() => {
       const { samples, duration } = await Recorder.processFile(file);
       $('upload-file-name').textContent = file.name + ' (' + duration.toFixed(1) + 's)';
       $('upload-file-name').classList.remove('hidden');
-      Identifier.identify(samples);
+      if (mammalMode) {
+        MammalIdentifier.identify(samples);
+      } else {
+        Identifier.identify(samples);
+      }
     } catch (err) {
       handleError(err.message);
       hideAnalyzing();
@@ -324,7 +334,17 @@ const App = (() => {
     const confClass = detection.confidence >= 0.7 ? 'high' :
                       detection.confidence >= 0.4 ? 'medium' : 'low';
 
-    const info = SpeciesDB.getInfo(detection.commonName);
+    // Try SpeciesDB first (BirdNET results); fall back to mammal detection's own fields
+    let info = SpeciesDB.getInfo(detection.commonName);
+    if (!info && detection.description) {
+      info = {
+        description: detection.description,
+        habitat:     detection.habitat,
+        funFact:     detection.funFact,
+        status:      detection.status,
+        commonName:  detection.commonName,
+      };
+    }
     const statusLabel = info ? SpeciesDB.getStatusLabel(info.status) : null;
 
     // Auto-flag alert banner for invasive/rare
@@ -527,6 +547,80 @@ const App = (() => {
         });
       }
     });
+  }
+
+  // ── Mode Toggle (Birds/Frogs ↔ Sacramento Mammals) ───────────────────────
+  function setupModeToggle() {
+    document.querySelectorAll('.mode-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const wantMammal = btn.dataset.mode === 'mammals';
+        if (wantMammal === mammalMode) return;
+
+        document.querySelectorAll('.mode-btn').forEach(b => {
+          b.classList.toggle('active', b === btn);
+        });
+        mammalMode = wantMammal;
+        updateRecordHint();
+
+        const recordBtn = $('record-btn');
+
+        if (mammalMode) {
+          if (!MammalIdentifier.ready() && !MammalIdentifier.loading()) {
+            // First time: load the mammal model
+            if (recordBtn) recordBtn.disabled = true;
+            showAnalyzing();
+            $('analyzing-indicator').innerHTML =
+              '<div class="spinner"></div><span>Loading mammal model — first time ~30s…</span>';
+
+            MammalIdentifier.init({
+              onProgress: (pct, msg) => {
+                const el = $('analyzing-indicator');
+                if (el) el.innerHTML = `<div class="spinner"></div><span>${msg || 'Loading mammal model…'}</span>`;
+              },
+              onReady: () => {
+                if (mammalMode && recordBtn) recordBtn.disabled = false;
+                $('results-section').classList.add('hidden');
+                showNotification('Mammal model ready — 16 Sacramento species loaded.', 'success');
+              },
+              onError: (msg) => {
+                handleError('Mammal model failed: ' + msg);
+                // Revert to bird mode
+                mammalMode = false;
+                document.querySelectorAll('.mode-btn').forEach(b => {
+                  b.classList.toggle('active', b.dataset.mode === 'birds');
+                });
+                if (recordBtn) recordBtn.disabled = false;
+                $('results-section').classList.add('hidden');
+                updateRecordHint();
+              },
+              onResults: handleResults,
+            });
+
+          } else if (MammalIdentifier.loading()) {
+            // Still loading from a previous toggle
+            if (recordBtn) recordBtn.disabled = true;
+          } else {
+            // Already loaded
+            if (recordBtn) recordBtn.disabled = false;
+          }
+
+        } else {
+          // Returning to bird mode — BirdNET already loaded at startup
+          if (recordBtn) recordBtn.disabled = !Identifier.ready();
+          $('results-section').classList.add('hidden');
+        }
+      });
+    });
+  }
+
+  function updateRecordHint() {
+    const hint = document.querySelector('.record-hint');
+    if (!hint) return;
+    if (mammalMode) {
+      hint.textContent = 'Record 3 seconds of mammal sound — Coyote, Raccoon, Bobcat + 13 more Sacramento species';
+    } else {
+      hint.innerHTML = 'Press to record 3 seconds of wildlife sound (birds, frogs, coyotes &amp; more)';
+    }
   }
 
   // ── Notifications ─────────────────────────────────────────────────────────

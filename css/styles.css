@@ -1046,6 +1046,41 @@ body {
   border: 0;
 }
 
+/* ── Mode Toggle (Birds vs Mammals) ─────────────────────────────────────── */
+.mode-toggle {
+  display: flex;
+  background: var(--gray-200);
+  border-radius: 999px;
+  padding: 3px;
+  margin: 0.5rem 1rem 0.75rem;
+}
+
+.mode-btn {
+  flex: 1;
+  padding: 0.45rem 0.75rem;
+  border: none;
+  border-radius: 999px;
+  background: transparent;
+  cursor: pointer;
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: var(--gray-600);
+  transition: var(--transition);
+  white-space: nowrap;
+  text-align: center;
+}
+
+.mode-btn.active {
+  background: var(--white);
+  color: var(--green-dark);
+  font-weight: 600;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.12);
+}
+
+.mode-btn[data-mode="mammals"].active {
+  color: var(--earth-brown);
+}
+
 /* ── Print ───────────────────────────────────────────────────────────────── */
 @media print {
   .tab-bar, .record-section, .upload-area, .result-actions,
