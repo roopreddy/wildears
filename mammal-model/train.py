@@ -37,9 +37,9 @@ MODEL_DIR     = Path("model")
 TARGET_SR     = 16000        # YAMNet input sample rate
 CLIP_DURATION = 3.0          # Seconds per training clip (matches BirdNET)
 YAMNET_URL    = "https://tfhub.dev/google/yamnet/1"
-EPOCHS        = 40
+EPOCHS        = 60
 BATCH_SIZE    = 32
-LEARNING_RATE = 1e-3
+LEARNING_RATE = 3e-4
 
 MODEL_DIR.mkdir(exist_ok=True)
 
@@ -81,14 +81,44 @@ def load_clips(wav_path: Path, duration: float = CLIP_DURATION):
 
 
 def augment_clip(clip: np.ndarray) -> np.ndarray:
-    """Simple time-domain augmentation to increase effective dataset size."""
-    # Random gain
-    clip = clip * np.random.uniform(0.8, 1.2)
-    # Random noise
-    clip = clip + np.random.normal(0, 0.005, clip.shape).astype(np.float32)
-    # Random time shift
-    shift = np.random.randint(-TARGET_SR // 4, TARGET_SR // 4)
+    """
+    Enhanced augmentation for wildlife sounds.
+    Pitch shift is the most impactful for animal calls (same animal,
+    different individual / age / distance).
+    """
+    clip_len = int(CLIP_DURATION * TARGET_SR)
+
+    # 1. Random gain ±30%
+    clip = clip * np.random.uniform(0.7, 1.3)
+
+    # 2. Random Gaussian noise (mic noise, wind)
+    clip = clip + np.random.normal(0, 0.008, clip.shape).astype(np.float32)
+
+    # 3. Random time shift ±1/3 second
+    shift = np.random.randint(-TARGET_SR // 3, TARGET_SR // 3)
     clip  = np.roll(clip, shift)
+
+    # 4. Pitch shift ±2 semitones (40% chance) — simulates size variation
+    #    OR time stretch ±15% (20% chance) — simulates recording speed
+    r = np.random.random()
+    if r < 0.4:
+        n_steps = np.random.uniform(-2.0, 2.0)
+        clip = librosa.effects.pitch_shift(clip, sr=TARGET_SR, n_steps=n_steps)
+        # Ensure correct length after pitch shift
+        if len(clip) > clip_len:
+            clip = clip[:clip_len]
+        elif len(clip) < clip_len:
+            clip = np.pad(clip, (0, clip_len - len(clip)))
+        clip = clip.astype(np.float32)
+    elif r < 0.6:
+        rate = np.random.uniform(0.85, 1.15)
+        clip = librosa.effects.time_stretch(clip, rate=rate)
+        if len(clip) > clip_len:
+            clip = clip[:clip_len]
+        elif len(clip) < clip_len:
+            clip = np.pad(clip, (0, clip_len - len(clip)))
+        clip = clip.astype(np.float32)
+
     return np.clip(clip, -1.0, 1.0)
 
 
@@ -119,10 +149,10 @@ def build_dataset(augment: bool = True):
 
         print(f"  {species['commonName']:30s} {len(wavs):3d} files → {len(species_clips):4d} clips")
 
-        # Augment minority classes to balance dataset
-        if augment and len(species_clips) < 200:
+        # Augment all classes to a minimum of 300 clips for balance
+        if augment and len(species_clips) < 300:
             extra = []
-            while len(species_clips) + len(extra) < 200:
+            while len(species_clips) + len(extra) < 300:
                 src = species_clips[np.random.randint(len(species_clips))]
                 extra.append(augment_clip(src))
             species_clips.extend(extra)
@@ -154,14 +184,19 @@ def extract_embeddings(clips: np.ndarray) -> np.ndarray:
 # ── Build & Train ─────────────────────────────────────────────────────────────
 
 def build_classifier(n_classes: int) -> tf.keras.Model:
-    """Small dense network that sits on top of YAMNet embeddings."""
+    """
+    Wider dense network on top of YAMNet embeddings.
+    L2 regularization + stronger dropout to reduce overfitting on small datasets.
+    """
+    reg = tf.keras.regularizers.l2(1e-4)
     model = tf.keras.Sequential([
         tf.keras.layers.Input(shape=(1024,), name="yamnet_embedding"),
-        tf.keras.layers.Dense(256, activation="relu"),
+        tf.keras.layers.Dense(512, activation="relu", kernel_regularizer=reg),
+        tf.keras.layers.BatchNormalization(),
+        tf.keras.layers.Dropout(0.5),
+        tf.keras.layers.Dense(256, activation="relu", kernel_regularizer=reg),
         tf.keras.layers.BatchNormalization(),
         tf.keras.layers.Dropout(0.4),
-        tf.keras.layers.Dense(128, activation="relu"),
-        tf.keras.layers.Dropout(0.3),
         tf.keras.layers.Dense(n_classes, activation="softmax", name="species_probs"),
     ], name="mammal_classifier")
     return model
@@ -216,7 +251,7 @@ def main():
     # 6. Callbacks
     callbacks = [
         tf.keras.callbacks.EarlyStopping(
-            monitor="val_accuracy", patience=8, restore_best_weights=True
+            monitor="val_accuracy", patience=12, restore_best_weights=True
         ),
         tf.keras.callbacks.ReduceLROnPlateau(
             monitor="val_loss", factor=0.5, patience=4, min_lr=1e-5

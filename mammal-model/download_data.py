@@ -25,7 +25,7 @@ from tqdm import tqdm
 # ── Config ────────────────────────────────────────────────────────────────────
 DATA_DIR       = Path("data")
 TARGET_SR      = 16000   # YAMNet expects 16kHz mono
-MAX_PER_SPECIES = 150    # Download up to 150 clips per species
+MAX_PER_SPECIES = 300    # Download up to 300 clips per species
 MIN_DURATION_S  = 1.0    # Skip clips shorter than 1 second
 MAX_DURATION_S  = 30.0   # Trim clips longer than 30 seconds
 INAT_API        = "https://api.inaturalist.org/v1"
