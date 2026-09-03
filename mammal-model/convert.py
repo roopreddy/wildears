@@ -94,6 +94,19 @@ def convert_manual(model) -> None:
     # --- topology (Keras JSON) ---
     topology = json.loads(model.to_json())
 
+    # Strip regularizer config — only needed for training, not inference.
+    # TF.js does not recognise Keras regularizer class names and will error.
+    def strip_regularizers(obj):
+        if isinstance(obj, dict):
+            return {k: strip_regularizers(v)
+                    for k, v in obj.items()
+                    if k not in ("kernel_regularizer", "bias_regularizer",
+                                 "activity_regularizer", "embeddings_regularizer")}
+        if isinstance(obj, list):
+            return [strip_regularizers(i) for i in obj]
+        return obj
+    topology = strip_regularizers(topology)
+
     manifest = {
         "format": "layers-model",
         "generatedBy": "keras",
@@ -132,7 +145,7 @@ def main():
     TFJS_DIR.mkdir(parents=True, exist_ok=True)
 
     # Try tensorflowjs API first (cleaner output), fall back to manual
-    print(f"\nConverting to TF.js LayersModel → {TFJS_DIR}")
+    print(f"\nConverting to TF.js LayersModel -> {TFJS_DIR}")
     if not convert_via_api(model):
         print("  Falling back to manual conversion...")
         convert_manual(model)
@@ -151,14 +164,12 @@ def main():
     print(f"\n  Total model size: {total/1024:.0f} KB ({total/1024/1024:.2f} MB)")
 
     print("""
-─────────────────────────────────────────────────────────
+---------------------------------------------------------
 Next steps:
-  1. Copy model/tfjs/ to wildears/mammal-model/tfjs/
-  2. Push to GitHub:
-       git add mammal-model/tfjs && git commit -m "Add TF.js mammal model" && git push
-  3. The mammal-worker.js loads it with:
-       tf.loadLayersModel('/wildears/mammal-model/tfjs/model.json')
-─────────────────────────────────────────────────────────
+  1. git add mammal-model/model/tfjs/
+  2. git commit -m "Update TF.js mammal model"
+  3. git push
+---------------------------------------------------------
 """)
 
 
