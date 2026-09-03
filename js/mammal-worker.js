@@ -18,7 +18,7 @@
 
 importScripts('https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.14.0/dist/tf.min.js');
 
-const YAMNET_URL      = 'https://tfhub.dev/google/tfjs-model/yamnet/tfjs/1';
+const YAMNET_URL      = '/wildears/mammal-model/yamnet/model.json';
 const CLASSIFIER_URL  = '/wildears/mammal-model/model/tfjs/model.json';
 const LABELS_URL      = '/wildears/mammal-model/model/tfjs/labels.json';
 const CONFIDENCE_THRESHOLD = 0.40;
@@ -36,7 +36,7 @@ async function init() {
 
     // 1. Load YAMNet (Google's audio feature extractor)
     postMessage({ type: 'progress', message: 'Loading YAMNet audio model...', percent: 10 });
-    yamnet = await tf.loadGraphModel(YAMNET_URL, { fromTFHub: true });
+    yamnet = await tf.loadGraphModel(YAMNET_URL);
 
     // 2. Load our mammal classifier
     postMessage({ type: 'progress', message: 'Loading mammal classifier...', percent: 60 });
