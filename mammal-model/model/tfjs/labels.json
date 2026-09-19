@@ -111,28 +111,17 @@
   },
   {
     "id": 10,
-    "key": "norway_rat",
-    "commonName": "Norway Rat",
-    "scientificName": "Rattus norvegicus",
-    "inatTaxonName": "Rattus norvegicus",
+    "key": "rat",
+    "commonName": "Rat",
+    "scientificName": "Rattus spp.",
+    "inatTaxonName": "Rattus",
     "status": "invasive",
-    "description": "Most common invasive rat in Sacramento. Makes high-pitched squeaks, chattering, and hissing sounds.",
-    "habitat": "Sewers, buildings, dumpsters, riparian areas, farms",
-    "funFact": "Norway rats arrived in North America on European ships in the 1700s and now live on every continent except Antarctica."
+    "description": "Invasive rats (Norway and Roof Rats) are common in Sacramento. They make high-pitched squeaks, chattering, and hissing sounds.",
+    "habitat": "Sewers, buildings, attics, trees, gardens, farms",
+    "funFact": "Rats arrived in North America on European ships in the 1700s and are now found on every continent except Antarctica."
   },
   {
     "id": 11,
-    "key": "roof_rat",
-    "commonName": "Roof Rat",
-    "scientificName": "Rattus rattus",
-    "inatTaxonName": "Rattus rattus",
-    "status": "invasive",
-    "description": "Slender, agile rat that climbs trees and nests in roofs. Makes squeaking and chattering sounds.",
-    "habitat": "Attics, trees, gardens, citrus orchards",
-    "funFact": "Roof rats were largely responsible for spreading the Black Plague across Europe via infected fleas."
-  },
-  {
-    "id": 12,
     "key": "feral_goat",
     "commonName": "Feral Goat",
     "scientificName": "Capra hircus",
@@ -143,7 +132,7 @@
     "funFact": "A single feral goat can strip an entire hillside of native plants, accelerating erosion."
   },
   {
-    "id": 13,
+    "id": 12,
     "key": "nutria",
     "commonName": "Nutria",
     "scientificName": "Myocastor coypus",
@@ -154,7 +143,7 @@
     "funFact": "Nutria can eat up to 25% of their body weight daily, destroying wetland root systems and causing bank collapse."
   },
   {
-    "id": 14,
+    "id": 13,
     "key": "virginia_opossum",
     "commonName": "Virginia Opossum",
     "scientificName": "Didelphis virginiana",
@@ -165,7 +154,7 @@
     "funFact": "Opossums are immune to rattlesnake venom and eat thousands of ticks per season."
   },
   {
-    "id": 15,
+    "id": 14,
     "key": "feral_cat",
     "commonName": "Feral Cat",
     "scientificName": "Felis catus",
@@ -173,6 +162,17 @@
     "status": "invasive",
     "description": "Unowned domestic cats gone wild. Makes yowling, hissing, and caterwauling sounds especially at night.",
     "habitat": "Suburbs, parks, farms, riparian areas — everywhere",
-    "funFact": "Feral cats kill an estimated 1.3–4 billion birds and 6–22 billion mammals in the US every year."
+    "funFact": "Feral cats kill an estimated 1.3-4 billion birds and 6-22 billion mammals in the US every year."
+  },
+  {
+    "id": 15,
+    "key": "_background",
+    "commonName": "Unknown Sound",
+    "scientificName": "",
+    "inatTaxonName": "",
+    "status": "none",
+    "description": "This sound could not be confidently identified as any Sacramento mammal.",
+    "habitat": "",
+    "funFact": ""
   }
 ]

@@ -2,8 +2,8 @@
 train.py — Fine-tune YAMNet on Sacramento-area mammal sounds.
 
 Architecture:
-  Audio (16kHz) → YAMNet (frozen, feature extractor) → mean pool
-  → Dense(256, relu) → Dropout(0.4) → Dense(N_species, softmax)
+  Audio (16kHz) -> YAMNet (frozen, feature extractor) -> mean pool
+  -> Dense(256, relu) -> Dropout(0.4) -> Dense(N_species, softmax)
 
 YAMNet is Google's pre-trained audio classifier (521 classes).
 We freeze it and train only our small mammal classifier on top.
@@ -147,15 +147,21 @@ def build_dataset(augment: bool = True):
         for wav in wavs:
             species_clips.extend(load_clips(wav))
 
-        print(f"  {species['commonName']:30s} {len(wavs):3d} files → {len(species_clips):4d} clips")
+        print(f"  {species['commonName']:30s} {len(wavs):3d} files -> {len(species_clips):4d} clips")
 
-        # Augment all classes to a minimum of 300 clips for balance
-        if augment and len(species_clips) < 300:
+        # Augment under-represented classes up to 500 clips for balance
+        if augment and len(species_clips) < 500:
             extra = []
-            while len(species_clips) + len(extra) < 300:
+            while len(species_clips) + len(extra) < 500:
                 src = species_clips[np.random.randint(len(species_clips))]
                 extra.append(augment_clip(src))
             species_clips.extend(extra)
+
+        # Cap over-represented classes to prevent domination
+        MAX_CLIPS = 2000
+        if len(species_clips) > MAX_CLIPS:
+            np.random.shuffle(species_clips)
+            species_clips = species_clips[:MAX_CLIPS]
 
         all_clips.extend(species_clips)
         all_labels.extend([label] * len(species_clips))
@@ -244,7 +250,7 @@ def main():
 
     model.compile(
         optimizer=tf.keras.optimizers.Adam(LEARNING_RATE),
-        loss="sparse_categorical_crossentropy",
+        loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=False),
         metrics=["accuracy"]
     )
 
@@ -288,7 +294,7 @@ def main():
         if mask.sum() == 0:
             continue
         acc   = (preds[mask] == idx).mean()
-        flag  = "⚠ invasive" if sp["status"] == "invasive" else ""
+        flag  = "[invasive]" if sp["status"] == "invasive" else ""
         print(f"  {sp['commonName']:30s} {acc:6.1%}  {flag}")
 
     # 10. Save model

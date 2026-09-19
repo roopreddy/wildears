@@ -116,11 +116,23 @@ async function predict(audioFloat32) {
     embedding.dispose();
 
     // Map to species detections
-    const detections = labels
+    const scored = labels
       .map((sp, i) => ({ ...sp, confidence: probs[i] }))
-      .filter(d => d.confidence >= CONFIDENCE_THRESHOLD)
-      .sort((a, b) => b.confidence - a.confidence)
-      .slice(0, 1);
+      .sort((a, b) => b.confidence - a.confidence);
+
+    // Filter out background/unknown class — don't show "Unknown Sound" to user
+    const top = scored.filter(d => d.key !== '_background');
+    const best = top[0];
+    const second = top[1];
+
+    // Only report if: meets threshold AND is clearly better than runner-up
+    const detections = [];
+    if (best && best.confidence >= CONFIDENCE_THRESHOLD) {
+      const gap = best.confidence - (second ? second.confidence : 0);
+      if (gap >= 0.10) {
+        detections.push(best);
+      }
+    }
 
     postMessage({ type: 'result', detections });
   } catch (err) {
